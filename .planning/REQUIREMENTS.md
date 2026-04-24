@@ -94,47 +94,47 @@ Deferred — not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| OOP-01 | TBD | Pending |
-| OOP-02 | TBD | Pending |
-| OOP-03 | TBD | Pending |
-| OOP-04 | TBD | Pending |
-| OOP-05 | TBD | Pending |
-| FP-01 | TBD | Pending |
-| FP-02 | TBD | Pending |
-| FP-03 | TBD | Pending |
-| FP-04 | TBD | Pending |
-| FP-05 | TBD | Pending |
-| PAR-01 | TBD | Pending |
-| PAR-02 | TBD | Pending |
-| PAR-03 | TBD | Pending |
-| LLM-01 | TBD | Pending |
-| LLM-02 | TBD | Pending |
-| LLM-03 | TBD | Pending |
-| LLM-04 | TBD | Pending |
-| REC-01 | TBD | Pending |
-| REC-02 | TBD | Pending |
-| API-01 | TBD | Pending |
-| API-02 | TBD | Pending |
-| API-03 | TBD | Pending |
-| API-04 | TBD | Pending |
-| API-05 | TBD | Pending |
-| API-06 | TBD | Pending |
-| API-07 | TBD | Pending |
-| UI-01 | TBD | Pending |
-| UI-02 | TBD | Pending |
-| UI-03 | TBD | Pending |
-| UI-04 | TBD | Pending |
-| UI-05 | TBD | Pending |
-| UI-06 | TBD | Pending |
-| DOC-01 | TBD | Pending |
-| DOC-02 | TBD | Pending |
-| DOC-03 | TBD | Pending |
+| OOP-01 | Phase 1 | Pending |
+| OOP-02 | Phase 1 | Pending |
+| OOP-03 | Phase 1 | Pending |
+| OOP-04 | Phase 1 | Pending |
+| OOP-05 | Phase 1 | Pending |
+| FP-01 | Phase 1 | Pending |
+| FP-02 | Phase 1 | Pending |
+| FP-03 | Phase 1 | Pending |
+| FP-04 | Phase 1 | Pending |
+| FP-05 | Phase 1 | Pending |
+| PAR-01 | Phase 1 | Pending |
+| PAR-02 | Phase 1 | Pending |
+| PAR-03 | Phase 1 | Pending |
+| LLM-01 | Phase 2 | Pending |
+| LLM-02 | Phase 2 | Pending |
+| LLM-03 | Phase 2 | Pending |
+| LLM-04 | Phase 2 | Pending |
+| REC-01 | Phase 2 | Pending |
+| REC-02 | Phase 2 | Pending |
+| API-01 | Phase 3 | Pending |
+| API-02 | Phase 3 | Pending |
+| API-03 | Phase 3 | Pending |
+| API-04 | Phase 3 | Pending |
+| API-05 | Phase 3 | Pending |
+| API-06 | Phase 3 | Pending |
+| API-07 | Phase 3 | Pending |
+| UI-01 | Phase 3 | Pending |
+| UI-02 | Phase 3 | Pending |
+| UI-03 | Phase 3 | Pending |
+| UI-04 | Phase 3 | Pending |
+| UI-05 | Phase 3 | Pending |
+| UI-06 | Phase 3 | Pending |
+| DOC-01 | Phase 4 | Pending |
+| DOC-02 | Phase 4 | Pending |
+| DOC-03 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 35 total
-- Mapped to phases: 0 (filled by roadmapper)
-- Unmapped: 35 ⚠️ (will be resolved when roadmap is created)
+- Mapped to phases: 35
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-04-24*
-*Last updated: 2026-04-24 after initial definition*
+*Last updated: 2026-04-24 — traceability filled in after roadmap creation*
