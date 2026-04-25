@@ -52,7 +52,7 @@ Plans:
 - [x] 02-02-PLAN.md — parse_prerequisites_text: LLM call + RULE_SCHEMA validation (depends on 02-01)
 - [x] 02-03-PLAN.md — parse_transcript_text + parse_transcript_pdf: LLM + pypdf pipeline (depends on 02-01)
 - [x] 02-04-PLAN.md — Recommender: get_eligible_courses + get_near_eligible_courses (depends on 02-01)
-- [ ] 02-05-PLAN.md — Tests: tests/test_phase2.py — mocked LLM + real recommender (depends on 02-02, 02-03, 02-04)
+- [x] 02-05-PLAN.md — Tests: tests/test_phase2.py — mocked LLM + real recommender (depends on 02-02, 02-03, 02-04)
 
 ### Phase 3: Web App
 **Goal**: A student can open the app in a browser, upload a transcript, pick a target course, and see a correct verdict — with the demo toggle showing OOP and FP returning identical results
