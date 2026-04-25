@@ -12,3 +12,8 @@ generate_plan_docx.py
 
 # Tests (not pushing yet)
 tests/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
