@@ -34,7 +34,7 @@ Plans:
 - [x] 01-01-PLAN.md — Shared foundation: grades.py, errors.py (CycleError), graph.py (DFS cycle detection)
 - [x] 01-02-PLAN.md — OOP backend: Rule class hierarchy + build_rule/build_catalog/check_eligibility (depends on 01-01)
 - [x] 01-03-PLAN.md — FP backend: frozen dataclasses + parse_rule/parse_catalog/evaluate_rule/check_eligibility (depends on 01-01)
-- [ ] 01-04-PLAN.md — PAR-03 tests: TestMinGrade and TestCycleDetection added to tests/test_checker.py (depends on 01-02 and 01-03)
+- [x] 01-04-PLAN.md — PAR-03 tests: TestMinGrade and TestCycleDetection added to tests/test_checker.py (depends on 01-02 and 01-03)
 
 ### Phase 2: LLM + Recommender
 **Goal**: The app can parse a real SJSU transcript PDF and natural-language prereq text into structured data, and can recommend what courses a student should take next
