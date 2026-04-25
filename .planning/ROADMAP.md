@@ -64,8 +64,13 @@ Plans:
   3. The recommended-courses view shows eligible courses and near-eligible courses with missing prereqs named
   4. Toggling the OOP/FP switch in the UI and re-checking a course shows identical verdict and explanation for both backends
   5. The UI has clean layout, readable typography, loading spinners during API calls, and visible error messages on failure
-**Plans**: TBD
-**UI hint**: yes
+**Plans:** 5 plans
+Plans:
+- [ ] 03-01-PLAN.md — FastAPI backend: all 4 endpoints + CORS + backend toggle + catalog cache at startup
+- [ ] 03-02-PLAN.md — Frontend scaffold: Vite + React + Tailwind in frontend/, TopNav with OOP/FP toggle, api.js, BackendContext
+- [ ] 03-03-PLAN.md — Upload + transcript confirm UI: UploadCard (drag-drop, spinner, error), CourseList (editable table)
+- [ ] 03-04-PLAN.md — Course picker + verdict + recommendations: CoursePicker, VerdictCard, RecommendationsPanel, full App.jsx wiring
+- [ ] 03-05-PLAN.md — Polish + human verification: keyboard nav, responsive grid, loading/disabled/error states audit
 
 ### Phase 4: Deliverables
 **Goal**: Paper, slide deck, and README exist and are demo-ready for class submission
@@ -86,5 +91,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Core Logic | 0/TBD | Not started | - |
 | 2. LLM + Recommender | 0/5 | Not started | - |
-| 3. Web App | 0/TBD | Not started | - |
+| 3. Web App | 0/5 | Not started | - |
 | 4. Deliverables | 0/TBD | Not started | - |
