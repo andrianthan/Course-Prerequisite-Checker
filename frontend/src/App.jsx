@@ -1,18 +1,23 @@
 /**
- * App — root layout with full upload + course confirmation flow.
+ * App — root layout for the Course Prerequisite Checker demo.
  *
- * State owned here:
- *   completed: {course_id: grade}    — editable by CourseList
- *   inProgress: [course_id]          — from transcript parse
- *   uploadLoading: bool
- *   uploadError: string|null
- *   hasTranscript: bool              — reveals Steps 2–4 after parse
+ *   <BackendProvider>
+ *     <TopNav />            — sticky, OOP/FP toggle
+ *     <main>
+ *       Step 1: UploadCard (or skip + manual entry)
+ *       Step 2: CourseList (completed) + in-progress chips
+ *       Step 3: CoursePicker → VerdictCard + RecommendationsPanel
+ *     </main>
+ *   </BackendProvider>
  */
 import React, { useState } from 'react'
 import { BackendProvider, useBackend } from './context/BackendContext.jsx'
 import { uploadTranscript } from './api.js'
 import { UploadCard } from './components/UploadCard.jsx'
 import { CourseList } from './components/CourseList.jsx'
+import CoursePicker from './components/CoursePicker.jsx'
+import VerdictCard from './components/VerdictCard.jsx'
+import RecommendationsPanel from './components/RecommendationsPanel.jsx'
 
 function TopNav() {
   const { backend, toggleBackend } = useBackend()
@@ -59,8 +64,14 @@ function AppContent() {
   const [hasTranscript, setHasTranscript] = useState(false)
   const [uploadLoading, setUploadLoading] = useState(false)
   const [uploadError, setUploadError] = useState(null)
+  const [selectedCourseId, setSelectedCourseId] = useState('')
+  const [newInProgressId, setNewInProgressId] = useState('')
 
   async function handleUpload(file) {
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      setUploadError('File must be a PDF.')
+      return
+    }
     setUploadLoading(true)
     setUploadError(null)
     try {
@@ -75,6 +86,26 @@ function AppContent() {
     }
   }
 
+  function startEmpty() {
+    setCompleted({})
+    setInProgress([])
+    setHasTranscript(true)
+  }
+
+  function addInProgress() {
+    const id = newInProgressId.trim().toUpperCase()
+    if (!id || inProgress.includes(id)) return
+    setInProgress(prev => [...prev, id])
+    setNewInProgressId('')
+  }
+
+  function removeInProgress(id) {
+    setInProgress(prev => prev.filter(c => c !== id))
+  }
+
+  // Compose record shape for downstream components
+  const record = hasTranscript ? { completed, in_progress: inProgress } : null
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       {/* Step 1 — Upload */}
@@ -85,26 +116,74 @@ function AppContent() {
           loading={uploadLoading}
           error={uploadError}
         />
+        {!hasTranscript && !uploadLoading && (
+          <button
+            onClick={startEmpty}
+            className="text-xs text-gray-500 hover:text-indigo-600 underline mt-2"
+          >
+            or skip upload and enter courses manually
+          </button>
+        )}
       </section>
 
-      {/* Step 2 — Confirm courses (revealed after parse) */}
+      {/* Step 2 — Confirm courses */}
       {hasTranscript && (
         <section>
           <SectionHeader step="2" title="Confirm your courses" />
           <CourseList courses={completed} onChange={setCompleted} />
-          {inProgress.length > 0 && (
-            <p className="mt-3 text-sm text-gray-500">
-              <span className="font-medium text-gray-700">In progress:</span>{' '}
-              {inProgress.join(', ')}
-            </p>
-          )}
+
+          <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+            <h3 className="text-xs font-semibold uppercase text-gray-500 mb-2">In progress</h3>
+            {inProgress.length === 0 ? (
+              <p className="text-sm text-gray-400 mb-2">None.</p>
+            ) : (
+              <ul className="flex flex-wrap gap-2 mb-2">
+                {inProgress.map(cid => (
+                  <li
+                    key={cid}
+                    className="flex items-center gap-1 bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded text-sm font-mono"
+                  >
+                    {cid}
+                    <button
+                      onClick={() => removeInProgress(cid)}
+                      className="text-amber-500 hover:text-red-500 text-xs"
+                      aria-label={`Remove ${cid}`}
+                    >
+                      ✕
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="flex gap-2">
+              <input
+                value={newInProgressId}
+                onChange={e => setNewInProgressId(e.target.value)}
+                placeholder="CS146"
+                className="flex-1 border border-gray-200 rounded px-2 py-1 text-sm font-mono"
+                onKeyDown={e => e.key === 'Enter' && addInProgress()}
+              />
+              <button
+                onClick={addInProgress}
+                className="bg-gray-600 text-white text-sm px-3 py-1 rounded hover:bg-gray-700"
+              >
+                + Add
+              </button>
+            </div>
+          </div>
         </section>
       )}
 
-      {/* Steps 3 + 4 placeholder — mounted by Plan 04 */}
+      {/* Step 3 — Pick + verdict + recommendations */}
       {hasTranscript && (
-        <section id="steps-3-4-placeholder" data-completed={JSON.stringify(completed)} data-in-progress={JSON.stringify(inProgress)}>
-          {/* CoursePicker, VerdictCard, and RecommendationsPanel mount here in Plan 04 */}
+        <section>
+          <SectionHeader step="3" title="Pick a course" />
+          <CoursePicker value={selectedCourseId} onSelect={setSelectedCourseId} />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+            <VerdictCard courseId={selectedCourseId} record={record} />
+            <RecommendationsPanel record={record} onPick={setSelectedCourseId} />
+          </div>
         </section>
       )}
     </main>
