@@ -179,3 +179,85 @@ class TestMinGrade:
         })
         eligible, _ = fp_check(catalog["BAR"], {"FOO": "D"}, ())
         assert eligible is False
+
+
+class TestCycleDetection:
+    """Cycle detection at parse time (PAR-03).
+
+    CONTEXT.md decision: cycles must be rejected at catalog parse time
+    (build_catalog / parse_catalog), not at eligibility-check time.
+    Both backends must raise CycleError on cyclic catalogs.
+    """
+
+    # Reusable cyclic catalog fixtures
+    TWO_NODE_CYCLE = {
+        "courses": {
+            "A": {
+                "name": "A",
+                "prerequisites": {"type": "course", "course_id": "B"},
+            },
+            "B": {
+                "name": "B",
+                "prerequisites": {"type": "course", "course_id": "A"},
+            },
+        }
+    }
+
+    SELF_LOOP = {
+        "courses": {
+            "A": {
+                "name": "A",
+                "prerequisites": {"type": "course", "course_id": "A"},
+            },
+        }
+    }
+
+    THREE_NODE_CYCLE = {
+        "courses": {
+            "A": {
+                "name": "A",
+                "prerequisites": {"type": "course", "course_id": "B"},
+            },
+            "B": {
+                "name": "B",
+                "prerequisites": {"type": "course", "course_id": "C"},
+            },
+            "C": {
+                "name": "C",
+                "prerequisites": {"type": "course", "course_id": "A"},
+            },
+        }
+    }
+
+    def test_oop_two_node_cycle(self):
+        with pytest.raises(CycleError):
+            oop_build_catalog(self.TWO_NODE_CYCLE)
+
+    def test_oop_self_loop(self):
+        with pytest.raises(CycleError):
+            oop_build_catalog(self.SELF_LOOP)
+
+    def test_oop_three_node_cycle(self):
+        with pytest.raises(CycleError):
+            oop_build_catalog(self.THREE_NODE_CYCLE)
+
+    def test_oop_no_cycle_in_sample(self, catalog_data):
+        # Sanity check: legitimate catalog still parses without raising
+        catalog = oop_build_catalog(catalog_data)
+        assert "CS46A" in catalog
+
+    def test_fp_two_node_cycle(self):
+        with pytest.raises(CycleError):
+            fp_parse_catalog(self.TWO_NODE_CYCLE)
+
+    def test_fp_self_loop(self):
+        with pytest.raises(CycleError):
+            fp_parse_catalog(self.SELF_LOOP)
+
+    def test_fp_three_node_cycle(self):
+        with pytest.raises(CycleError):
+            fp_parse_catalog(self.THREE_NODE_CYCLE)
+
+    def test_fp_no_cycle_in_sample(self, catalog_data):
+        catalog = fp_parse_catalog(catalog_data)
+        assert "CS46A" in catalog
