@@ -49,7 +49,7 @@ Plans:
 **Plans:** 5 plans
 Plans:
 - [x] 02-01-PLAN.md — Foundation: add pypdf + jsonschema to requirements.txt; create src/api/_client.py with guarded get_client()
-- [ ] 02-02-PLAN.md — parse_prerequisites_text: LLM call + RULE_SCHEMA validation (depends on 02-01)
+- [x] 02-02-PLAN.md — parse_prerequisites_text: LLM call + RULE_SCHEMA validation (depends on 02-01)
 - [x] 02-03-PLAN.md — parse_transcript_text + parse_transcript_pdf: LLM + pypdf pipeline (depends on 02-01)
 - [x] 02-04-PLAN.md — Recommender: get_eligible_courses + get_near_eligible_courses (depends on 02-01)
 - [ ] 02-05-PLAN.md — Tests: tests/test_phase2.py — mocked LLM + real recommender (depends on 02-02, 02-03, 02-04)
