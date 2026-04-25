@@ -20,7 +20,7 @@ STUDENT_RECORD_SCHEMA = {
     "required": ["completed", "in_progress"],
 }
 
-TRANSCRIPT_SYSTEM_PROMPT = """You are a parser that extracts course history from an SJSU unofficial transcript.
+TRANSCRIPT_SYSTEM_PROMPT = """You are a parser that extracts course history from an SJSU MySJSU unofficial transcript.
 
 Output ONLY valid JSON with this exact structure:
 {
@@ -28,15 +28,34 @@ Output ONLY valid JSON with this exact structure:
   "in_progress": ["COURSE_ID", ...]
 }
 
-Rules:
-- "completed" maps course IDs to final letter grades (e.g., "A", "B+", "C-", "F").
-- "in_progress" lists courses currently enrolled (no final grade yet).
-- Normalize course IDs by removing spaces: "CS 46A" -> "CS46A", "MATH 31" -> "MATH31".
-- Include withdrawn courses in "completed" with grade "W".
-- Include incomplete courses in "completed" with grade "I".
-- If a course appears multiple times, use the most recent final grade.
-- Ignore audit courses (grade "AU") and courses taken at other institutions.
-- Output only JSON — no explanation, no markdown, no preamble.
+## Course ID normalization
+- Concatenate department code + course number with NO space: "CS 46B" -> "CS46B", "MATH 42" -> "MATH42", "CS 100W" -> "CS100W", "CS 157A" -> "CS157A", "PHIL 134" -> "PHIL134".
+- Preserve trailing letters (W, A, B, C, etc.) — they are part of the course id.
+
+## What to INCLUDE in "completed"
+- Any course taken at SJSU with a letter grade in the GR column: A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F.
+- Withdrawn courses: include with grade "W".
+- Incomplete courses: include with grade "I".
+- All departments — not just CS. Include MATH, PHIL, COMM, HIST, etc. (the catalog will filter what is relevant later).
+- If a course appears multiple times (retakes), use the most RECENT letter grade.
+
+## What to SKIP (do NOT include in "completed")
+- "EXTERNAL CREDIT" rows (transfer credits from other colleges, e.g. "Mission College", "Chaffey College", "College of Alameda", "Cerro Coso Community College") — these have UE units but no SJSU letter grade.
+- AP credit rows (e.g. "AP Calculus AB", "AP Computer Science A", "AP World History") — these show a numeric AP score (3, 4, 5), not a letter grade.
+- Courses with grade "CR" (credit/no-grade), "NC", "AU" (audit), "RP" (in progress / report pending without final grade), or "RD".
+- "EXTERNAL CREDIT TOTALS", "SEMESTER TOTAL", "SJSU CUM", "ALL COLLEGE" totals/aggregate rows.
+- Header lines like "FALL SEMESTER 2024", "SPRING SEMESTER 2025", "WINTER SESSION 2025", "UGD - Undergraduate Degree", "MAJOR: BS Computer Science", "Dean's Scholar", "DEGREE OBJECTIVE:", "UNIVERSITY MEMORANDUM", "STUDENT NAME:", "STUDENT NUMBER:", "DATE PRINTED:", "BIRTH MO/DAY:", "Note:" annotations.
+- "Course Topic:" sublines that appear under special-topics courses (e.g. CS 192). Keep the parent course line (e.g. CS192) but ignore the topic description.
+- The column-header line containing "UA UG UE GR GP GPA".
+- Page footers (URLs, page numbers).
+
+## What goes in "in_progress"
+- Courses listed under a semester header marked "IN PROGRESS" or under the current/upcoming term that has no final grades shown.
+- If a future semester says "ENROLLED" or "IN PROGRESS" but lists no individual courses, leave "in_progress" empty unless courses are explicitly named.
+- Use the same normalized course-id format ("CS46B" style).
+
+## Output format
+Output ONLY the JSON object. No explanation, no markdown fences, no preamble.
 """
 
 
