@@ -70,7 +70,7 @@ Plans:
 - [x] 03-02-PLAN.md — Frontend scaffold: Vite + React + Tailwind in frontend/, TopNav with OOP/FP toggle, api.js, BackendContext
 - [x] 03-03-PLAN.md — Upload + transcript confirm UI: UploadCard (drag-drop, spinner, error), CourseList (editable table)
 - [x] 03-04-PLAN.md — Course picker + verdict + recommendations: CoursePicker, VerdictCard, RecommendationsPanel, full App.jsx wiring
-- [ ] 03-05-PLAN.md — Polish + human verification: keyboard nav, responsive grid, loading/disabled/error states audit
+- [x] 03-05-PLAN.md — Polish + human verification: keyboard nav, responsive grid, loading/disabled/error states audit
 
 ### Phase 4: Deliverables
 **Goal**: Paper, slide deck, and README exist and are demo-ready for class submission
