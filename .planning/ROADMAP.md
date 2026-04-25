@@ -48,7 +48,7 @@ Plans:
   5. `get_near_eligible_courses` identifies courses exactly one missing prereq away and names what is missing
 **Plans:** 5 plans
 Plans:
-- [ ] 02-01-PLAN.md — Foundation: add pypdf + jsonschema to requirements.txt; create src/api/_client.py with guarded get_client()
+- [x] 02-01-PLAN.md — Foundation: add pypdf + jsonschema to requirements.txt; create src/api/_client.py with guarded get_client()
 - [ ] 02-02-PLAN.md — parse_prerequisites_text: LLM call + RULE_SCHEMA validation (depends on 02-01)
 - [ ] 02-03-PLAN.md — parse_transcript_text + parse_transcript_pdf: LLM + pypdf pipeline (depends on 02-01)
 - [ ] 02-04-PLAN.md — Recommender: get_eligible_courses + get_near_eligible_courses (depends on 02-01)
