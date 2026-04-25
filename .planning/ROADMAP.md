@@ -66,7 +66,7 @@ Plans:
   5. The UI has clean layout, readable typography, loading spinners during API calls, and visible error messages on failure
 **Plans:** 5 plans
 Plans:
-- [ ] 03-01-PLAN.md — FastAPI backend: all 4 endpoints + CORS + backend toggle + catalog cache at startup
+- [x] 03-01-PLAN.md — FastAPI backend: all 4 endpoints + CORS + backend toggle + catalog cache at startup
 - [ ] 03-02-PLAN.md — Frontend scaffold: Vite + React + Tailwind in frontend/, TopNav with OOP/FP toggle, api.js, BackendContext
 - [ ] 03-03-PLAN.md — Upload + transcript confirm UI: UploadCard (drag-drop, spinner, error), CourseList (editable table)
 - [ ] 03-04-PLAN.md — Course picker + verdict + recommendations: CoursePicker, VerdictCard, RecommendationsPanel, full App.jsx wiring
