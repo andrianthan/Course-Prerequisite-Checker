@@ -46,7 +46,13 @@ Plans:
   3. Running the app without `OPENROUTER_API_KEY` set produces a clear error message instead of a crash or silent `None`
   4. `get_eligible_courses` returns only courses the student has not yet taken and whose prereqs are fully met
   5. `get_near_eligible_courses` identifies courses exactly one missing prereq away and names what is missing
-**Plans**: TBD
+**Plans:** 5 plans
+Plans:
+- [ ] 02-01-PLAN.md — Foundation: add pypdf + jsonschema to requirements.txt; create src/api/_client.py with guarded get_client()
+- [ ] 02-02-PLAN.md — parse_prerequisites_text: LLM call + RULE_SCHEMA validation (depends on 02-01)
+- [ ] 02-03-PLAN.md — parse_transcript_text + parse_transcript_pdf: LLM + pypdf pipeline (depends on 02-01)
+- [ ] 02-04-PLAN.md — Recommender: get_eligible_courses + get_near_eligible_courses (depends on 02-01)
+- [ ] 02-05-PLAN.md — Tests: tests/test_phase2.py — mocked LLM + real recommender (depends on 02-02, 02-03, 02-04)
 
 ### Phase 3: Web App
 **Goal**: A student can open the app in a browser, upload a transcript, pick a target course, and see a correct verdict — with the demo toggle showing OOP and FP returning identical results
@@ -79,6 +85,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Logic | 0/TBD | Not started | - |
-| 2. LLM + Recommender | 0/TBD | Not started | - |
+| 2. LLM + Recommender | 0/5 | Not started | - |
 | 3. Web App | 0/TBD | Not started | - |
 | 4. Deliverables | 0/TBD | Not started | - |
