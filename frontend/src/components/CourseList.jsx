@@ -16,13 +16,13 @@ const GRADE_OPTIONS = [
 ]
 
 function GradeBadge({ grade }) {
-  const isGood = ['A+','A','A-','B+','B','B-'].includes(grade)
-  const isOk   = ['C+','C','C-'].includes(grade)
-  const color  = isGood
-    ? 'bg-green-100 text-green-800'
-    : isOk
-    ? 'bg-amber-100 text-amber-800'
-    : 'bg-red-100 text-red-800'
+  const isA   = ['A+','A','A-'].includes(grade)
+  const isB   = ['B+','B','B-'].includes(grade)
+  const isC   = ['C+','C','C-'].includes(grade)
+  const color = isA ? 'bg-green-100 text-green-800'
+              : isB ? 'bg-blue-100 text-blue-800'
+              : isC ? 'bg-amber-100 text-amber-800'
+              :       'bg-red-100 text-red-800'
   return (
     <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${color}`}>
       {grade}

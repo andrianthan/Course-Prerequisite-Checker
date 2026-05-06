@@ -1,0 +1,124 @@
+{
+  "goals": {
+    "full_stack": {
+      "label": "Full Stack Developer",
+      "icon": "🌐",
+      "description": "Build complete web apps — frontend UI, backend APIs, and databases",
+      "courses": {
+        "CS174": "Server-side web programming is the core backend skill for web apps",
+        "CS157A": "Databases are the backbone of every web app's persistence layer",
+        "CS151": "OOP design patterns are used in every major web framework",
+        "CS158A": "Understanding HTTP and networking makes you a better API designer",
+        "CS146": "Strong algorithms are essential for back-end performance and interviews",
+        "CS160": "Software engineering practices (version control, testing) are table stakes",
+        "CS49J": "Java is widely used in enterprise backend systems",
+        "CS155": "Algorithm analysis helps you write efficient server-side code"
+      }
+    },
+    "ml_engineer": {
+      "label": "Machine Learning Engineer",
+      "icon": "🤖",
+      "description": "Train, deploy, and maintain ML models in production systems",
+      "courses": {
+        "CS171": "Core ML course — supervised/unsupervised learning algorithms",
+        "CS156": "AI foundations: search, reasoning, and intelligent agents",
+        "CS122": "Advanced Python is the primary language for ML libraries",
+        "CS22B": "Data analysis with Python is the first step in every ML pipeline",
+        "CS131": "Big data tools (Spark, Hadoop) used in production ML pipelines",
+        "CS133": "Data visualization is essential for understanding model outputs",
+        "CS155": "Algorithmic complexity matters when scaling ML to large datasets",
+        "CS157A": "ML systems need robust data storage and retrieval"
+      }
+    },
+    "cybersecurity": {
+      "label": "Cybersecurity Engineer",
+      "icon": "🔐",
+      "description": "Protect systems, networks, and data from attacks and vulnerabilities",
+      "courses": {
+        "CS166": "Core security course — cryptography, attacks, and defenses",
+        "CS149": "OS internals are essential for understanding privilege escalation",
+        "CS158A": "Network protocols are the battlefield for most attacks",
+        "CS147": "Hardware-level knowledge reveals side-channel and firmware attacks",
+        "CS47": "Low-level computer systems understanding is foundational for security",
+        "CS154": "Formal languages underpin cryptographic protocol verification",
+        "CS158B": "Network management maps to firewall and IDS configuration",
+        "CS155": "Algorithm analysis is used in breaking and building cryptographic systems"
+      }
+    },
+    "data_scientist": {
+      "label": "Data Scientist",
+      "icon": "📊",
+      "description": "Extract insights from large datasets using statistics, ML, and visualization",
+      "courses": {
+        "CS22B": "Python data analysis is the core skill for every data scientist",
+        "CS171": "Machine learning is half of data science",
+        "CS133": "Data visualization communicates your findings to stakeholders",
+        "CS131": "Big data tools let you work with datasets that don't fit in memory",
+        "CS122": "Advanced Python lets you write efficient data pipelines",
+        "CS156": "AI techniques augment statistical analysis",
+        "CS157A": "SQL and database querying is a daily tool for data scientists",
+        "CS155": "Algorithms help you build efficient data processing pipelines"
+      }
+    },
+    "systems_engineer": {
+      "label": "Systems / Embedded Engineer",
+      "icon": "⚙️",
+      "description": "Build operating systems, embedded firmware, and low-level infrastructure",
+      "courses": {
+        "CS149": "OS design is the core systems engineering subject",
+        "CS147": "Computer architecture is essential for optimizing system performance",
+        "CS49C": "C is the primary language for systems and embedded programming",
+        "CS144": "C++ is used in performance-critical systems and game engines",
+        "CS159": "Parallel processing is critical for multi-core system software",
+        "CS153": "Compilers translate high-level code into machine instructions",
+        "CS47": "Computer systems fundamentals: memory, caches, and I/O",
+        "CS154": "Formal languages are used in compiler design and protocol specification"
+      }
+    },
+    "mobile_developer": {
+      "label": "Mobile Developer",
+      "icon": "📱",
+      "description": "Build iOS and Android apps with polished UIs and backend integration",
+      "courses": {
+        "CS175": "Mobile device development is the direct course for iOS/Android",
+        "CS151": "OOP design patterns are used in every mobile framework",
+        "CS160": "Software engineering practices apply directly to app store releases",
+        "CS174": "Backend APIs power the server side of mobile apps",
+        "CS157A": "Mobile apps need local databases for offline-first functionality",
+        "CS158A": "Network knowledge helps you build fast, reliable API clients",
+        "CS146": "Algorithms improve app performance and pass technical interviews",
+        "CS161": "Capstone software project gives you a portfolio-ready mobile app"
+      }
+    },
+    "game_developer": {
+      "label": "Game Developer",
+      "icon": "🎮",
+      "description": "Build interactive games with graphics, physics, and gameplay systems",
+      "courses": {
+        "CS134": "Game design and programming is the direct course for game development",
+        "CS116A": "Computer graphics fundamentals: rendering, shading, and geometry",
+        "CS116B": "Graphics algorithms: advanced rendering and real-time techniques",
+        "CS144": "C++ is the industry standard language for game engines",
+        "CS146": "Algorithms for pathfinding, collision detection, and AI in games",
+        "CS149": "OS knowledge helps you optimize game performance on hardware",
+        "CS155": "Algorithm analysis helps profile and optimize game performance",
+        "CS136": "Computer vision techniques are used in AR/VR gaming"
+      }
+    },
+    "cloud_devops": {
+      "label": "Cloud / DevOps Engineer",
+      "icon": "☁️",
+      "description": "Build and operate scalable cloud infrastructure and CI/CD pipelines",
+      "courses": {
+        "CS149": "Operating systems knowledge is foundational for Linux server administration",
+        "CS158A": "TCP/IP, DNS, and load balancing are core cloud primitives",
+        "CS158B": "Network management maps to cloud VPC and firewall configuration",
+        "CS159": "Parallel processing principles apply to distributed cloud workloads",
+        "CS160": "CI/CD and testing practices are table stakes for DevOps",
+        "CS147": "Computer architecture informs cloud instance type and cost optimization",
+        "CS166": "Security is a core responsibility for cloud and DevOps engineers",
+        "CS161": "Software project experience with deployment is directly applicable"
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { useBackend } from '../context/BackendContext.jsx'
 import { fetchRecommendations } from '../api.js'
 
-export default function RecommendationsPanel({ record, onPick }) {
+export default function RecommendationsPanel({ record, onPick, onAddToPlan, planned = [] }) {
   const { backend } = useBackend()
   const [data, setData] = useState({ eligible: [], near_eligible: [] })
   const [tab, setTab] = useState('eligible')
@@ -30,7 +30,9 @@ export default function RecommendationsPanel({ record, onPick }) {
 
   if (!record) return null
 
-  const list = tab === 'eligible' ? data.eligible : data.near_eligible
+  const plannedSet = new Set(planned)
+  const list = (tab === 'eligible' ? data.eligible : data.near_eligible)
+    .filter(item => tab !== 'eligible' || !plannedSet.has(item.course_id))
 
   return (
     <section className="bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -74,6 +76,18 @@ export default function RecommendationsPanel({ record, onPick }) {
               >
                 <span className="font-mono text-indigo-600 font-semibold w-20">{item.course_id}</span>
                 <span className="text-gray-700 flex-1 truncate">{item.name}</span>
+                {tab === 'eligible' && onAddToPlan && (
+                  <button
+                    onClick={e => { e.stopPropagation(); onAddToPlan(item.course_id) }}
+                    className="text-green-600 hover:text-green-800 ml-auto"
+                    aria-label={`Add ${item.course_id} to semester plan`}
+                    title="Add to semester plan"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </button>
+                )}
                 {tab === 'near' && (
                   <span className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-mono">
                     {item.missing}

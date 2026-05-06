@@ -8,7 +8,7 @@ load_dotenv()
 
 # Primary model — free tier, advertises structured output support.
 # Fallback: "meta-llama/llama-3.1-8b-instruct:free" if Gemma quota exhausted.
-MODEL = "google/gemma-3-12b-it:free"
+MODEL = "deepseek/deepseek-chat"
 
 
 def get_client() -> OpenAI:

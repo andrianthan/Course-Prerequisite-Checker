@@ -10,7 +10,11 @@ const BASE_URL = 'http://localhost:8000'
 async function _json(res) {
   const data = await res.json()
   if (!res.ok) {
-    const msg = data?.error ?? data?.detail ?? `HTTP ${res.status}`
+    const detail = data?.detail
+    const msg =
+      data?.error ??
+      (typeof detail === 'string' ? detail : detail?.error) ??
+      `HTTP ${res.status}`
     throw new Error(msg)
   }
   return data
@@ -77,5 +81,44 @@ export async function fetchRecommendations(completed, inProgress, backend = 'oop
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ completed, in_progress: inProgress }),
   })
+  return _json(res)
+}
+
+/**
+ * Fetch graduation progress (total + CS units completed vs required).
+ * Returns {units_completed, units_required, cs_units_completed, cs_units_required}
+ */
+export async function fetchProgress(completed) {
+  const res = await fetch(`${BASE_URL}/api/progress`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ completed }),
+  })
+  return _json(res)
+}
+
+/**
+ * Fetch career goal course recommendations.
+ * @param {{[course_id: string]: string}} completed
+ * @param {string[]} inProgress
+ * @param {string} careerGoal — goal id like "full_stack"
+ * @param {'oop'|'fp'} backend
+ * Returns {goal_label, goal_description, courses: [{course_id, name, career_reason, status, missing}]}
+ */
+export async function fetchCareerRecommendations(completed, inProgress, careerGoal, backend = 'oop') {
+  const res = await fetch(`${BASE_URL}/api/career-recommendations?career_goal=${careerGoal}&backend=${backend}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ completed, in_progress: inProgress }),
+  })
+  return _json(res)
+}
+
+/**
+ * Fetch available career goals.
+ * Returns [{id, label, icon, description}, ...]
+ */
+export async function fetchCareerGoals() {
+  const res = await fetch(`${BASE_URL}/api/career-goals`)
   return _json(res)
 }

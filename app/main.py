@@ -26,16 +26,18 @@ load_dotenv()
 
 _ROOT = Path(__file__).parent.parent
 _CATALOG_PATH = _ROOT / "data" / "sjsu_cs_catalog.json"
+_GRAD_REQS_PATH = _ROOT / "data" / "grad_requirements.json"
 
 _catalog_data: dict = {}
 _oop_catalog: dict = {}
 _fp_catalog: dict = {}
+_grad_reqs: dict = {}
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Load catalog JSON and build both OOP + FP catalogs once at startup."""
-    global _catalog_data, _oop_catalog, _fp_catalog
+    global _catalog_data, _oop_catalog, _fp_catalog, _grad_reqs
     from src.shared.loader import load_catalog
     from src.oop.checker import build_catalog as oop_build_catalog
     from src.fp.checker import parse_catalog as fp_parse_catalog
@@ -43,6 +45,9 @@ async def lifespan(app: FastAPI):
     _catalog_data = load_catalog(str(_CATALOG_PATH))
     _oop_catalog = oop_build_catalog(_catalog_data)
     _fp_catalog = fp_parse_catalog(_catalog_data)
+    import json
+    with open(_GRAD_REQS_PATH) as f:
+        _grad_reqs = json.load(f)
     yield
 
 
@@ -50,7 +55,7 @@ app = FastAPI(title="Course Prerequisite Checker API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -89,6 +94,31 @@ class RecommendResponse(BaseModel):
     near_eligible: list[NearCourseRef]
 
 
+class CareerCourseResult(BaseModel):
+    course_id: str
+    name: str
+    career_reason: str
+    status: str  # "eligible" | "near_eligible" | "not_yet"
+    missing: str | None = None
+
+
+class CareerRecommendResponse(BaseModel):
+    goal_label: str
+    goal_description: str
+    courses: list[CareerCourseResult]
+
+
+class ProgressRequest(BaseModel):
+    completed: dict[str, str]
+
+
+class ProgressResponse(BaseModel):
+    units_completed: float
+    units_required: int
+    cs_units_completed: float
+    cs_units_required: int
+
+
 def _get_backend(backend: str):
     """Return (catalog, check_fn, mode) for the requested backend."""
     if backend == "fp":
@@ -113,9 +143,34 @@ def get_catalog():
         raise HTTPException(status_code=503, detail="Catalog not loaded")
     courses = _catalog_data.get("courses", {})
     return [
-        {"course_id": cid, "name": info.get("name", cid)}
+        {"course_id": cid, "name": info.get("name", cid), "units": info.get("units", 3)}
         for cid, info in sorted(courses.items())
     ]
+
+
+@app.post("/api/progress", response_model=ProgressResponse)
+def get_progress(body: ProgressRequest):
+    """Return graduation unit progress for a student."""
+    if not _catalog_data:
+        raise HTTPException(status_code=503, detail="Catalog not loaded")
+    courses = _catalog_data.get("courses", {})
+    skip_grades = {"F", "W", "I"}
+    units_completed = 0.0
+    cs_units_completed = 0.0
+    for course_id, grade in body.completed.items():
+        if grade in skip_grades:
+            continue
+        course_info = courses.get(course_id, {})
+        u = course_info.get("units", 3) if isinstance(course_info, dict) else 3
+        units_completed += u
+        if course_id.startswith("CS"):
+            cs_units_completed += u
+    return ProgressResponse(
+        units_completed=units_completed,
+        units_required=_grad_reqs.get("total_units_required", 120),
+        cs_units_completed=cs_units_completed,
+        cs_units_required=_grad_reqs.get("cs_major_units_required", 51),
+    )
 
 
 @app.post("/api/transcript")
@@ -222,3 +277,77 @@ def get_recommendations(
     ]
 
     return RecommendResponse(eligible=eligible_out, near_eligible=near_out)
+
+
+@app.post("/api/career-recommendations", response_model=CareerRecommendResponse)
+def get_career_recommendations(
+    body: RecommendRequest,
+    career_goal: Annotated[str, Query()] = "full_stack",
+    backend: Annotated[str, Query()] = "oop",
+):
+    """Return goal-filtered course recommendations with eligibility status."""
+    import json as _json
+    goals_path = _ROOT / "data" / "career_goals.json"
+    goals_data = _json.loads(goals_path.read_text())
+
+    goal_info = goals_data["goals"].get(career_goal)
+    if goal_info is None:
+        raise HTTPException(status_code=404, detail={"error": f"Career goal {career_goal!r} not found"})
+
+    catalog, check_fn, mode = _get_backend(backend)
+    in_progress = tuple(body.in_progress) if mode == "fp" else body.in_progress
+
+    _NOT_ELIGIBLE_PREFIX = "Not eligible: "
+
+    results = []
+    for course_id, career_reason in goal_info["courses"].items():
+        course_obj = catalog.get(course_id)
+        if course_obj is None:
+            continue
+
+        try:
+            eligible, explanation = check_fn(course_obj, body.completed, in_progress)
+        except Exception:
+            continue
+
+        if eligible:
+            status = "eligible"
+            missing = None
+        else:
+            missing = None
+            status = "not_yet"
+            if explanation.startswith(_NOT_ELIGIBLE_PREFIX):
+                missing_part = explanation[len(_NOT_ELIGIBLE_PREFIX):]
+                unmet = [item.strip() for item in missing_part.split(",") if item.strip()]
+                if len(unmet) == 1:
+                    status = "near_eligible"
+                    missing = unmet[0]
+
+        results.append(CareerCourseResult(
+            course_id=course_id,
+            name=_course_name(catalog, course_id),
+            career_reason=career_reason,
+            status=status,
+            missing=missing,
+        ))
+
+    order = {"eligible": 0, "near_eligible": 1, "not_yet": 2}
+    results.sort(key=lambda r: order[r.status])
+
+    return CareerRecommendResponse(
+        goal_label=goal_info["label"],
+        goal_description=goal_info["description"],
+        courses=results,
+    )
+
+
+@app.get("/api/career-goals")
+def list_career_goals():
+    """Return list of available career goals."""
+    import json as _json
+    goals_path = _ROOT / "data" / "career_goals.json"
+    goals_data = _json.loads(goals_path.read_text())
+    return [
+        {"id": gid, "label": g["label"], "icon": g["icon"], "description": g["description"]}
+        for gid, g in goals_data["goals"].items()
+    ]

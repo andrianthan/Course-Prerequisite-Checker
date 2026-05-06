@@ -10,14 +10,17 @@
  *     </main>
  *   </BackendProvider>
  */
-import React, { useState } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { BackendProvider, useBackend } from './context/BackendContext.jsx'
-import { uploadTranscript } from './api.js'
+import { uploadTranscript, fetchCatalog } from './api.js'
 import { UploadCard } from './components/UploadCard.jsx'
 import { CourseList } from './components/CourseList.jsx'
 import CoursePicker from './components/CoursePicker.jsx'
-import VerdictCard from './components/VerdictCard.jsx'
 import RecommendationsPanel from './components/RecommendationsPanel.jsx'
+import ParadigmComparison from './components/ParadigmComparison.jsx'
+import ProgressCard from './components/ProgressCard.jsx'
+import SemesterPlanCard from './components/SemesterPlanCard.jsx'
+import CareerGoalPanel from './components/CareerGoalPanel.jsx'
 
 function TopNav() {
   const { backend, toggleBackend } = useBackend()
@@ -66,6 +69,12 @@ function AppContent() {
   const [uploadError, setUploadError] = useState(null)
   const [selectedCourseId, setSelectedCourseId] = useState('')
   const [newInProgressId, setNewInProgressId] = useState('')
+  const [semesterPlan, setSemesterPlan] = useState([])
+  const [catalogList, setCatalogList] = useState([])
+
+  useEffect(() => {
+    fetchCatalog().then(setCatalogList).catch(() => {})
+  }, [])
 
   async function handleUpload(file) {
     if (!file.name.toLowerCase().endsWith('.pdf')) {
@@ -103,8 +112,17 @@ function AppContent() {
     setInProgress(prev => prev.filter(c => c !== id))
   }
 
-  // Compose record shape for downstream components
-  const record = hasTranscript ? { completed, in_progress: inProgress } : null
+  function addToPlan(courseId) {
+    setSemesterPlan(prev => prev.includes(courseId) ? prev : [...prev, courseId])
+  }
+  function removeFromPlan(courseId) {
+    setSemesterPlan(prev => prev.filter(id => id !== courseId))
+  }
+
+  const record = useMemo(
+    () => hasTranscript ? { completed, in_progress: inProgress } : null,
+    [hasTranscript, completed, inProgress]
+  )
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8 space-y-8">
@@ -171,6 +189,8 @@ function AppContent() {
               </button>
             </div>
           </div>
+
+          <ProgressCard record={record} />
         </section>
       )}
 
@@ -180,9 +200,13 @@ function AppContent() {
           <SectionHeader step="3" title="Pick a course" />
           <CoursePicker value={selectedCourseId} onSelect={setSelectedCourseId} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-            <VerdictCard courseId={selectedCourseId} record={record} />
-            <RecommendationsPanel record={record} onPick={setSelectedCourseId} />
+          <div className="mt-4 space-y-4">
+            <ParadigmComparison courseId={selectedCourseId} record={record} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <RecommendationsPanel record={record} onPick={setSelectedCourseId} onAddToPlan={addToPlan} planned={semesterPlan} />
+              <SemesterPlanCard plan={semesterPlan} catalog={catalogList} onRemove={removeFromPlan} />
+            </div>
+            <CareerGoalPanel record={record} onPick={setSelectedCourseId} onAddToPlan={addToPlan} planned={semesterPlan} />
           </div>
         </section>
       )}
