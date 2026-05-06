@@ -1,0 +1,54 @@
+{
+  "courses": {
+    "CS46A": {
+      "name": "Introduction to Programming",
+      "prerequisites": null
+    },
+    "CS46B": {
+      "name": "Introduction to Data Structures",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS46A",
+        "min_grade": "C-"
+      }
+    },
+    "CS146": {
+      "name": "Data Structures and Algorithms",
+      "prerequisites": {
+        "type": "and",
+        "requirements": [
+          {"type": "course", "course_id": "CS46B", "min_grade": "C-"},
+          {"type": "course", "course_id": "MATH42"}
+        ]
+      }
+    },
+    "CS152": {
+      "name": "Programming Paradigms",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      }
+    },
+    "CS160": {
+      "name": "Software Engineering",
+      "prerequisites": {
+        "type": "and",
+        "requirements": [
+          {"type": "course", "course_id": "CS146", "min_grade": "C-"},
+          {
+            "type": "or",
+            "requirements": [
+              {"type": "course", "course_id": "CS151"},
+              {"type": "course", "course_id": "CS152"}
+            ]
+          }
+        ]
+      }
+    },
+    "MATH42": {
+      "name": "Discrete Mathematics",
+      "prerequisites": null
+    }
+  }
+}

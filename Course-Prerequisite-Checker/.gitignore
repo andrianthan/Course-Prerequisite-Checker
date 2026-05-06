@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+venv/
+.env
+.env.example
+.DS_Store
+
+# Project planning docs (not code)
+PROJECT_PLAN.md
+PROJECT_PLAN.docx
+generate_plan_docx.py
+
+# Tests (not pushing yet)
+tests/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/

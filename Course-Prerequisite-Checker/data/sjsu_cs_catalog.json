@@ -1,0 +1,502 @@
+{
+  "courses": {
+    "CS22A": {
+      "name": "Python for Everyone",
+      "prerequisites": null,
+      "corequisites": [
+        "CS1022AS"
+      ],
+      "raw_text": null,
+      "units": 3
+    },
+    "CS22B": {
+      "name": "Python Programming for Data Analysis",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS22A",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 22A",
+      "units": 3
+    },
+    "CS42": {
+      "name": "Discrete Mathematics",
+      "prerequisites": null,
+      "raw_text": "Math Enrollment Category M-I or M-II and satisfactory score on the Precalculus Proficiency Assessment",
+      "units": 3
+    },
+    "CS46A": {
+      "name": "Introduction to Programming",
+      "prerequisites": null,
+      "raw_text": "Math Enrollment Category M-I, M-II, or M-III, or MATH 1 with a grade of C- or better",
+      "units": 4
+    },
+    "CS46B": {
+      "name": "Introduction to Data Structures",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS46A",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 46A or CS 46AX (with grade of C- or better)",
+      "units": 4
+    },
+    "CS47": {
+      "name": "Introduction to Computer Systems",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS42",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 42 with a grade of C- or better",
+      "units": 4
+    },
+    "CS48": {
+      "name": "Applied Algorithms",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS46B",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 46B with a grade of C- or better",
+      "units": 3
+    },
+    "CS49C": {
+      "name": "Programming in C",
+      "prerequisites": null,
+      "raw_text": "Previous programming experience and completion of math GE",
+      "units": 4
+    },
+    "CS49J": {
+      "name": "Programming in Java",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS46B",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 46B with a grade of C- or better",
+      "units": 4
+    },
+    "CS100W": {
+      "name": "Technical Writing Workshop",
+      "prerequisites": null,
+      "raw_text": "A3 or equivalent second semester composition course (with a grade of C- or better); completion of core GE; and upper division standing",
+      "units": 3
+    },
+    "CS116A": {
+      "name": "Introduction to Computer Graphics",
+      "prerequisites": {
+        "type": "and",
+        "requirements": [
+          {
+            "type": "course",
+            "course_id": "MATH31",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "MATH39",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "CS146",
+            "min_grade": "C-"
+          }
+        ]
+      },
+      "raw_text": "MATH 31, MATH 39, CS 146 (with a grade of C- or better in each) and previous programming experience in C/C++",
+      "units": 3
+    },
+    "CS116B": {
+      "name": "Computer Graphics Algorithms",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS116A",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 116A",
+      "units": 3
+    },
+    "CS122": {
+      "name": "Advanced Programming with Python",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 3
+    },
+    "CS123A": {
+      "name": "Bioinformatics I",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS46B",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 46B",
+      "units": 3
+    },
+    "CS123B": {
+      "name": "Bioinformatics II",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS123A",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 123A",
+      "units": 3
+    },
+    "CS131": {
+      "name": "Processing Big Data - Tools and Techniques",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS46B",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 46B",
+      "units": 3
+    },
+    "CS133": {
+      "name": "Introduction to Data Visualization",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 3
+    },
+    "CS134": {
+      "name": "Computer Game Design and Programming",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 3
+    },
+    "CS136": {
+      "name": "Introduction to Computer Vision",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 3
+    },
+    "CS144": {
+      "name": "Advanced C++ Programming",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS46B",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 46B",
+      "units": 3
+    },
+    "CS146": {
+      "name": "Data Structures and Algorithms",
+      "prerequisites": {
+        "type": "and",
+        "requirements": [
+          {
+            "type": "course",
+            "course_id": "MATH30",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "MATH42",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "CS46B",
+            "min_grade": "C-"
+          }
+        ]
+      },
+      "raw_text": "MATH 30, MATH 42, CS 46B, and [(CS 48 or CS 49J) if CS 46B was not in Java], each with a grade of C- or better",
+      "units": 4
+    },
+    "CS147": {
+      "name": "Computer Architecture",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS47",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 47",
+      "units": 3
+    },
+    "CS149": {
+      "name": "Operating Systems",
+      "prerequisites": {
+        "type": "and",
+        "requirements": [
+          {
+            "type": "course",
+            "course_id": "CS146",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "CS47",
+            "min_grade": "C-"
+          }
+        ]
+      },
+      "raw_text": "CS 146, CS 47 with a grade of C- or better",
+      "units": 3
+    },
+    "CS151": {
+      "name": "Object-Oriented Design",
+      "prerequisites": {
+        "type": "and",
+        "requirements": [
+          {
+            "type": "course",
+            "course_id": "MATH42",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "CS46B",
+            "min_grade": "C-"
+          }
+        ]
+      },
+      "raw_text": "MATH 42, CS 46B, and [(CS 48 or CS 49J) if CS 46B was not in Java], each with a grade of C- or better",
+      "units": 4
+    },
+    "CS152": {
+      "name": "Programming Paradigms",
+      "prerequisites": {
+        "type": "or",
+        "requirements": [
+          {
+            "type": "course",
+            "course_id": "CS151",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "CMPE135",
+            "min_grade": "C-"
+          }
+        ]
+      },
+      "raw_text": "CS 151 or CMPE 135 (with a grade of C- or better)",
+      "units": 4
+    },
+    "CS153": {
+      "name": "Concepts of Compiler Design",
+      "prerequisites": {
+        "type": "and",
+        "requirements": [
+          {
+            "type": "course",
+            "course_id": "CS146",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "CS47",
+            "min_grade": "C-"
+          }
+        ]
+      },
+      "raw_text": "CS 146, CS 47 with a grade of C- or better",
+      "units": 3
+    },
+    "CS154": {
+      "name": "Formal Languages and Computability",
+      "prerequisites": {
+        "type": "and",
+        "requirements": [
+          {
+            "type": "course",
+            "course_id": "MATH42",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "CS146",
+            "min_grade": "C-"
+          }
+        ]
+      },
+      "raw_text": "MATH 42, CS 146 with a grade of C- or better",
+      "units": 3
+    },
+    "CS155": {
+      "name": "Introduction to the Design and Analysis of Algorithms",
+      "prerequisites": {
+        "type": "and",
+        "requirements": [
+          {
+            "type": "course",
+            "course_id": "CS146",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "MATH42",
+            "min_grade": "C-"
+          }
+        ]
+      },
+      "raw_text": "CS 146, MATH 42 with a grade of C- or better",
+      "units": 3
+    },
+    "CS156": {
+      "name": "Introduction to Artificial Intelligence",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 3
+    },
+    "CS157A": {
+      "name": "Introduction to Database Management Systems",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 3
+    },
+    "CS157B": {
+      "name": "Database Management Systems II",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS157A",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 157A",
+      "units": 3
+    },
+    "CS158A": {
+      "name": "Computer Networks",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 4
+    },
+    "CS158B": {
+      "name": "Computer Network Management",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS158A",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 158A",
+      "units": 4
+    },
+    "CS159": {
+      "name": "Introduction to Parallel Processing",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 3
+    },
+    "CS160": {
+      "name": "Software Engineering",
+      "prerequisites": {
+        "type": "and",
+        "requirements": [
+          {
+            "type": "course",
+            "course_id": "CS146",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "CS151",
+            "min_grade": "C-"
+          },
+          {
+            "type": "course",
+            "course_id": "CS100W",
+            "min_grade": "C"
+          }
+        ]
+      },
+      "raw_text": "CS 146, CS 151 (with a grade of C- or better in each); CS 100W (with a grade of C or better)",
+      "units": 3
+    },
+    "CS161": {
+      "name": "Software Project",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS160",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 160",
+      "units": 3
+    },
+    "CS166": {
+      "name": "Information Security",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 4
+    },
+    "CS171": {
+      "name": "Introduction to Machine Learning",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 3
+    },
+    "CS174": {
+      "name": "Server-side Web Programming",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS46B",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 46B",
+      "units": 4
+    },
+    "CS175": {
+      "name": "Mobile Device Development",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS47",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 47",
+      "units": 3
+    },
+    "CS176": {
+      "name": "Introduction to Social Network Analysis",
+      "prerequisites": {
+        "type": "course",
+        "course_id": "CS146",
+        "min_grade": "C-"
+      },
+      "raw_text": "CS 146",
+      "units": 3
+    }
+  }
+}

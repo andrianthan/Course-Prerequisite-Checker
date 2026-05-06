@@ -1,0 +1,10 @@
+{
+  "student_id": "012345678",
+  "name": "Jane Doe",
+  "completed": {
+    "CS46A": "B+",
+    "CS46B": "A-",
+    "MATH42": "B"
+  },
+  "in_progress": ["CS146"]
+}
