@@ -61,6 +61,17 @@ function SectionHeader({ step, title }) {
   )
 }
 
+const TRANSFER_CREDITS = [
+  // GE transfers — satisfy GE areas via backend
+  { id: 'ENGL 1A',   name: 'First Year Writing',    areas: ['A2'],       label: 'GE: A2' },
+  { id: 'MATH 30',   name: 'Calculus I',             areas: ['B4'],       label: 'GE: B4' },
+  { id: 'TRLD B1B3', name: 'Physical + Lab Science', areas: ['B1', 'B3'], label: 'GE: B1, B3' },
+  { id: 'TRLD C2',   name: 'Humanities',             areas: ['C2'],       label: 'GE: C2' },
+  // CS transfers — injected into completed so prereq checker sees them
+  { id: 'CS46A', name: 'Intro to Programming',      course: { id: 'CS46A', grade: 'CR' }, label: 'CS prereq' },
+  { id: 'CS47',  name: 'Intro to Computer Systems', course: { id: 'CS47',  grade: 'A'  }, label: 'CS prereq' },
+]
+
 function AppContent() {
   const [completed, setCompleted] = useState({})
   const [inProgress, setInProgress] = useState([])
@@ -71,6 +82,26 @@ function AppContent() {
   const [newInProgressId, setNewInProgressId] = useState('')
   const [semesterPlan, setSemesterPlan] = useState([])
   const [catalogList, setCatalogList] = useState([])
+  const [activeTransferIds, setActiveTransferIds] = useState(() => new Set(TRANSFER_CREDITS.map(t => t.id)))
+
+  const toggleTransfer = (id) => {
+    setActiveTransferIds(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  const activeTransferAreas = TRANSFER_CREDITS
+    .filter(t => activeTransferIds.has(t.id) && t.areas)
+    .flatMap(t => t.areas)
+
+  const csTransferCompleted = useMemo(() =>
+    Object.fromEntries(
+      TRANSFER_CREDITS
+        .filter(t => activeTransferIds.has(t.id) && t.course)
+        .map(t => [t.course.id, t.course.grade])
+    ), [activeTransferIds])
 
   useEffect(() => {
     fetchCatalog().then(setCatalogList).catch(() => {})
@@ -120,8 +151,8 @@ function AppContent() {
   }
 
   const record = useMemo(
-    () => hasTranscript ? { completed, in_progress: inProgress } : null,
-    [hasTranscript, completed, inProgress]
+    () => hasTranscript ? { completed: { ...completed, ...csTransferCompleted }, in_progress: inProgress } : null,
+    [hasTranscript, completed, inProgress, csTransferCompleted]
   )
 
   return (
@@ -149,6 +180,35 @@ function AppContent() {
         <section>
           <SectionHeader step="2" title="Confirm your courses" />
           <CourseList courses={completed} onChange={setCompleted} />
+
+          {/* Transfer credits — user-toggleable */}
+          <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+            <h3 className="text-xs font-semibold uppercase text-gray-500 mb-1">Transfer Credits</h3>
+            <p className="text-xs text-gray-400 mb-3">Uncheck credits that don't apply to this transcript.</p>
+            <div className="divide-y divide-gray-100">
+              {TRANSFER_CREDITS.map(tc => {
+                const active = activeTransferIds.has(tc.id)
+                return (
+                  <label key={tc.id} className="flex items-center gap-3 py-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={active}
+                      onChange={() => toggleTransfer(tc.id)}
+                      className="accent-indigo-600 w-4 h-4"
+                    />
+                    <div className="flex-1 flex items-center gap-2">
+                      <span className={`text-sm font-mono ${active ? 'text-indigo-500' : 'text-gray-400'}`}>{tc.id}</span>
+                      <span className={`text-sm ${active ? 'text-gray-600' : 'text-gray-400'}`}>{tc.name}</span>
+                      <span className="text-xs text-gray-400">{tc.label}</span>
+                    </div>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${active ? 'bg-gray-100 text-gray-500' : 'bg-gray-50 text-gray-300'}`}>
+                      TRANSFER
+                    </span>
+                  </label>
+                )
+              })}
+            </div>
+          </div>
 
           <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-sm p-4">
             <h3 className="text-xs font-semibold uppercase text-gray-500 mb-2">In progress</h3>
@@ -190,7 +250,7 @@ function AppContent() {
             </div>
           </div>
 
-          <ProgressCard record={record} />
+          <ProgressCard record={record} transferAreas={activeTransferAreas} />
         </section>
       )}
 
@@ -202,11 +262,11 @@ function AppContent() {
 
           <div className="mt-4 space-y-4">
             <ParadigmComparison courseId={selectedCourseId} record={record} />
+            <CareerGoalPanel record={record} onPick={setSelectedCourseId} onAddToPlan={addToPlan} planned={semesterPlan} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <RecommendationsPanel record={record} onPick={setSelectedCourseId} onAddToPlan={addToPlan} planned={semesterPlan} />
               <SemesterPlanCard plan={semesterPlan} catalog={catalogList} onRemove={removeFromPlan} />
             </div>
-            <CareerGoalPanel record={record} onPick={setSelectedCourseId} onAddToPlan={addToPlan} planned={semesterPlan} />
           </div>
         </section>
       )}

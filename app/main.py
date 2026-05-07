@@ -27,17 +27,19 @@ load_dotenv()
 _ROOT = Path(__file__).parent.parent
 _CATALOG_PATH = _ROOT / "data" / "sjsu_cs_catalog.json"
 _GRAD_REQS_PATH = _ROOT / "data" / "grad_requirements.json"
+_GE_REQS_PATH = _ROOT / "data" / "ge_requirements.json"
 
 _catalog_data: dict = {}
 _oop_catalog: dict = {}
 _fp_catalog: dict = {}
 _grad_reqs: dict = {}
+_ge_reqs: dict = {}
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Load catalog JSON and build both OOP + FP catalogs once at startup."""
-    global _catalog_data, _oop_catalog, _fp_catalog, _grad_reqs
+    global _catalog_data, _oop_catalog, _fp_catalog, _grad_reqs, _ge_reqs
     from src.shared.loader import load_catalog
     from src.oop.checker import build_catalog as oop_build_catalog
     from src.fp.checker import parse_catalog as fp_parse_catalog
@@ -48,6 +50,8 @@ async def lifespan(app: FastAPI):
     import json
     with open(_GRAD_REQS_PATH) as f:
         _grad_reqs = json.load(f)
+    with open(_GE_REQS_PATH) as f:
+        _ge_reqs = json.load(f)
     yield
 
 
@@ -110,6 +114,14 @@ class CareerRecommendResponse(BaseModel):
 
 class ProgressRequest(BaseModel):
     completed: dict[str, str]
+    transfer_areas: list[str] = []
+
+
+class GEAreaStatus(BaseModel):
+    name: str
+    units_required: int
+    units_completed: float
+    satisfied: bool
 
 
 class ProgressResponse(BaseModel):
@@ -117,6 +129,9 @@ class ProgressResponse(BaseModel):
     units_required: int
     cs_units_completed: float
     cs_units_required: int
+    ge_units_completed: float
+    ge_units_required: int
+    ge_areas: dict[str, GEAreaStatus]
 
 
 def _get_backend(backend: str):
@@ -155,23 +170,108 @@ def get_progress(body: ProgressRequest):
         raise HTTPException(status_code=503, detail="Catalog not loaded")
     courses = _catalog_data.get("courses", {})
     skip_grades = {"F", "W", "I"}
+    
+    # Build GE lookups with no-space keys to match parser output ("ENGL1A" not "ENGL 1A")
+    areas_data = _ge_reqs.get("areas", {})
+    course_to_areas_ns = {
+        k.replace(" ", ""): v for k, v in _ge_reqs.get("course_to_areas", {}).items()
+    }
+    ge_course_units: dict[str, int] = {}
+    for area_info in areas_data.values():
+        for c in area_info.get("courses", []):
+            cid_ns = c["id"].replace(" ", "")
+            if cid_ns not in ge_course_units:
+                ge_course_units[cid_ns] = c.get("units", 3)
+
     units_completed = 0.0
     cs_units_completed = 0.0
+    ge_units_completed = 0.0
+    area_units_done: dict[str, float] = {}
+
     for course_id, grade in body.completed.items():
         if grade in skip_grades:
             continue
-        course_info = courses.get(course_id, {})
-        u = course_info.get("units", 3) if isinstance(course_info, dict) else 3
+        # Unit count: check GE data first, then CS catalog
+        if course_id in ge_course_units:
+            u = float(ge_course_units[course_id])
+        else:
+            course_info = courses.get(course_id, {})
+            u = float(course_info.get("units", 3) if isinstance(course_info, dict) else 3)
+
         units_completed += u
         if course_id.startswith("CS"):
             cs_units_completed += u
+
+        areas_for_course = course_to_areas_ns.get(course_id, [])
+        if areas_for_course:
+            ge_units_completed += u
+        for area_id in areas_for_course:
+            area_units_done[area_id] = area_units_done.get(area_id, 0.0) + u
+
+    # Auto-satisfy areas completed via transfer credit (can't be parsed from transcript)
+    for area_id in body.transfer_areas:
+        if area_id in areas_data:
+            req = float(areas_data[area_id].get("units_required", 3))
+            already = area_units_done.get(area_id, 0.0)
+            if already < req:
+                ge_units_completed += req - already
+                area_units_done[area_id] = req
+
+    # Build per-area status (skip B3 with 0 units required, skip PE)
+    ge_areas: dict[str, GEAreaStatus] = {}
+    for area_id, area_info in areas_data.items():
+        if area_id in ("B3", "PE"):
+            continue
+        units_req = area_info.get("units_required", 3)
+        if units_req == 0:
+            continue
+        units_done = area_units_done.get(area_id, 0.0)
+        ge_areas[area_id] = GEAreaStatus(
+            name=area_info["name"],
+            units_required=units_req,
+            units_completed=min(units_done, float(units_req)),
+            satisfied=units_done >= units_req,
+        )
+
     return ProgressResponse(
         units_completed=units_completed,
         units_required=_grad_reqs.get("total_units_required", 120),
         cs_units_completed=cs_units_completed,
         cs_units_required=_grad_reqs.get("cs_major_units_required", 51),
+        ge_units_completed=ge_units_completed,
+        ge_units_required=_ge_reqs.get("total_ge_units_required", 51),
+        ge_areas=ge_areas,
     )
 
+
+
+@app.get("/api/ge-courses")
+def get_ge_courses():
+    """Return GE areas with their satisfying courses (IDs normalized, no spaces)."""
+    if not _ge_reqs:
+        raise HTTPException(status_code=503, detail="GE data not loaded")
+    areas_data = _ge_reqs.get("areas", {})
+    result = {}
+    skip_areas = {"B3", "PE", "Z", "AMER_INST"}
+    for area_id, area_info in areas_data.items():
+        if area_id in skip_areas:
+            continue
+        units_req = area_info.get("units_required", 3)
+        if units_req == 0:
+            continue
+        result[area_id] = {
+            "name": area_info["name"],
+            "units_required": units_req,
+            "courses": [
+                {
+                    "id": c["id"].replace(" ", ""),
+                    "name": c["name"],
+                    "units": c.get("units", 3),
+                }
+                for c in area_info.get("courses", [])
+            ],
+        }
+    return result
 
 @app.post("/api/transcript")
 async def upload_transcript(file: UploadFile = File(...)):
@@ -299,8 +399,11 @@ def get_career_recommendations(
 
     _NOT_ELIGIBLE_PREFIX = "Not eligible: "
 
+    already_done = set(body.completed.keys()) | set(body.in_progress)
     results = []
     for course_id, career_reason in goal_info["courses"].items():
+        if course_id in already_done:
+            continue
         course_obj = catalog.get(course_id)
         if course_obj is None:
             continue
@@ -314,14 +417,14 @@ def get_career_recommendations(
             status = "eligible"
             missing = None
         else:
-            missing = None
             status = "not_yet"
+            missing = None
             if explanation.startswith(_NOT_ELIGIBLE_PREFIX):
                 missing_part = explanation[len(_NOT_ELIGIBLE_PREFIX):]
                 unmet = [item.strip() for item in missing_part.split(",") if item.strip()]
                 if len(unmet) == 1:
                     status = "near_eligible"
-                    missing = unmet[0]
+                missing = missing_part
 
         results.append(CareerCourseResult(
             course_id=course_id,

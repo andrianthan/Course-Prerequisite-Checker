@@ -88,11 +88,11 @@ export async function fetchRecommendations(completed, inProgress, backend = 'oop
  * Fetch graduation progress (total + CS units completed vs required).
  * Returns {units_completed, units_required, cs_units_completed, cs_units_required}
  */
-export async function fetchProgress(completed) {
+export async function fetchProgress(completed, transferAreas = []) {
   const res = await fetch(`${BASE_URL}/api/progress`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ completed }),
+    body: JSON.stringify({ completed, transfer_areas: transferAreas }),
   })
   return _json(res)
 }
@@ -120,5 +120,14 @@ export async function fetchCareerRecommendations(completed, inProgress, careerGo
  */
 export async function fetchCareerGoals() {
   const res = await fetch(`${BASE_URL}/api/career-goals`)
+  return _json(res)
+}
+
+/**
+ * Fetch GE areas with their satisfying courses.
+ * Returns { [areaId]: { name, units_required, courses: [{id, name, units}] } }
+ */
+export async function fetchGECourses() {
+  const res = await fetch(`${BASE_URL}/api/ge-courses`)
   return _json(res)
 }
